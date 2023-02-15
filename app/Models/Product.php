@@ -17,4 +17,8 @@ class Product extends Model
     public function purchase(){
         return $this->belongsTo(Purchase::class);
     }
+
+    public function searchPurchase(){
+        return $this->belongsTo(Purchase::class,'product_id','id')->where('product','LIKE','%'.request()->search['value'].'%');
+    }
 }

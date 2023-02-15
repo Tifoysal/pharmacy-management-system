@@ -7,7 +7,7 @@
 <x-alerts.danger :error="session('login_error')" />
 @endif
 <!-- Form -->
-<form action="{{route('login')}}" method="post">
+<form action="{{route('login.post')}}" method="post">
 	@csrf
 	<div class="form-group">
 		<input class="form-control" name="email" type="text" placeholder="Email">

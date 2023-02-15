@@ -49,7 +49,7 @@
                     </div>
                 </div>
                 <div class="dash-widget-info">
-                    
+
                     <h6 class="text-muted">Product Categories</h6>
                     <div class="progress progress-sm">
                         <div class="progress-bar bg-success w-50"></div>
@@ -70,7 +70,7 @@
                     </div>
                 </div>
                 <div class="dash-widget-info">
-                    
+
                     <h6 class="text-muted">Expired Products</h6>
                     <div class="progress progress-sm">
                         <div class="progress-bar bg-danger w-50"></div>
@@ -91,7 +91,7 @@
                     </div>
                 </div>
                 <div class="dash-widget-info">
-                    
+
                     <h6 class="text-muted">System Users</h6>
                     <div class="progress progress-sm">
                         <div class="progress-bar bg-warning w-50"></div>
@@ -119,7 +119,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                                                                                      
+
                         </tbody>
                     </table>
                 </div>
@@ -128,7 +128,7 @@
     </div>
 
     <div class="col-md-12 col-lg-6">
-                    
+
         <!-- Pie Chart -->
         <div class="card card-chart">
             <div class="card-header">
@@ -141,10 +141,10 @@
             </div>
         </div>
         <!-- /Pie Chart -->
-        
-    </div>	
-    
-    
+
+    </div>
+
+
 </div>
 
 @endsection
@@ -157,14 +157,15 @@
             serverSide: true,
             ajax: "{{route('sales.index')}}",
             columns: [
-                {data: 'product', name: 'product'},
-                {data: 'quantity', name: 'quantity'},
+                {data: 'medicine', name: 'medicine',searchable: true},
+                {data: 'quantity', name: 'quantity',searchable: true},
                 {data: 'total_price', name: 'total_price'},
-				{data: 'date', name: 'date'},
+                {data: 'date', name: 'date'},
+                {data: 'action', name: 'action', orderable: false, searchable: false},
             ]
         });
-        
+
     });
-</script> 
+</script>
 <script src="{{asset('assets/plugins/chart.js/Chart.bundle.min.js')}}"></script>
 @endpush

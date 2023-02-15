@@ -64,11 +64,11 @@ Route::middleware(['auth'])->prefix('admin')->group(function(){
     Route::get('settings',[SettingController::class,'index'])->name('settings');
 });
 
+Route::get('/',[LoginController::class,'index'])->name('login');
 Route::middleware(['guest'])->prefix('admin')->group(function () {
     Route::get('',[DashboardController::class,'Index']);
 
-    Route::get('login',[LoginController::class,'index'])->name('login');
-    Route::post('login',[LoginController::class,'login']);
+    Route::post('login',[LoginController::class,'login'])->name('login.post');
 
     Route::get('register',[RegisterController::class,'index'])->name('register');
     Route::post('register',[RegisterController::class,'store']);
@@ -79,6 +79,3 @@ Route::middleware(['guest'])->prefix('admin')->group(function () {
     Route::post('reset-password',[ResetPasswordController::class,'resetPassword'])->name('password.update');
 });
 
-Route::get('/', function () {
-    return view('welcome');
-});

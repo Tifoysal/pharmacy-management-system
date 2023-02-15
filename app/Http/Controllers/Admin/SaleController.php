@@ -22,23 +22,23 @@ class SaleController extends Controller
     public function index(Request $request)
     {
         $title = 'sales';
+
         if($request->ajax()){
-            $sales = Sale::latest();
+            if($request->search['value'])
+            {
+//                $product_name=$request->search['value'];
+                $sales = Sale::with('product.searchPurchase')->get();
+            }else
+            {
+                $sales = Sale::with('purchase')->get();
+            }
+
             return DataTables::of($sales)
                     ->addIndexColumn()
-                    ->addColumn('product',function($sale){
-                        $image = '';
-                        if(!empty($sale->product)){
-                            $image = null;
-                            if(!empty($sale->product->purchase->image)){
-                                $image = '<span class="avatar avatar-sm mr-2">
-                                <img class="avatar-img" src="'.asset("storage/purchases/".$sale->product->purchase->image).'" alt="image">
-                                </span>';
-                            }
-                            return $sale->product->purchase->product. ' ' . $image;
-                        }                 
+                    ->addColumn('medicine',function($sale){
+                            return $sale->product->purchase->product;
                     })
-                    ->addColumn('total_price',function($sale){                   
+                    ->addColumn('total_price',function($sale){
                         return settings('app_currency','$').' '. $sale->total_price;
                     })
                     ->addColumn('date',function($row){
@@ -93,7 +93,7 @@ class SaleController extends Controller
             'quantity'=>'required|integer|min:1'
         ]);
         $sold_product = Product::find($request->product);
-        
+
         /**update quantity of
             sold item from
          purchases
@@ -118,20 +118,20 @@ class SaleController extends Controller
             ]);
 
             $notification = notify("Product has been sold");
-        } 
+        }
         if($new_quantity <=1 && $new_quantity !=0){
-            // send notification 
+            // send notification
             $product = Purchase::where('quantity', '<=', 1)->first();
             event(new PurchaseOutStock($product));
-            // end of notification 
+            // end of notification
             $notification = notify("Product is running out of stock!!!");
-            
+
         }
 
         return redirect()->route('sales.index')->with($notification);
     }
 
-    
+
 
     /**
      * Show the form for editing the specified resource.
@@ -190,14 +190,14 @@ class SaleController extends Controller
             ]);
 
             $notification = notify("Product has been updated");
-        } 
+        }
         if($new_quantity <=1 && $new_quantity !=0){
-            // send notification 
+            // send notification
             $product = Purchase::where('quantity', '<=', 1)->first();
             event(new PurchaseOutStock($product));
-            // end of notification 
+            // end of notification
             $notification = notify("Product is running out of stock!!!");
-            
+
         }
         return redirect()->route('sales.index')->with($notification);
     }

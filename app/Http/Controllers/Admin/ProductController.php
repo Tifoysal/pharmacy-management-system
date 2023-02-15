@@ -34,9 +34,9 @@ class ProductController extends Controller
                             </span>';
                         }
                         return $product->purchase->product. ' ' . $image;
-                    }                 
+                    }
                 })
-                
+
                 ->addColumn('category',function($product){
                     $category = null;
                     if(!empty($product->purchase->category)){
@@ -44,7 +44,7 @@ class ProductController extends Controller
                     }
                     return $category;
                 })
-                ->addColumn('price',function($product){                   
+                ->addColumn('price',function($product){
                     return settings('app_currency','$').' '. $product->price;
                 })
                 ->addColumn('quantity',function($product){
@@ -76,7 +76,7 @@ class ProductController extends Controller
             'title'
         ));
     }
-    
+
 
     /**
      * Show the form for creating a new resource.
@@ -90,7 +90,7 @@ class ProductController extends Controller
         return view('admin.products.create',compact(
             'title','purchases'
         ));
-        
+
     }
 
     /**
@@ -121,7 +121,7 @@ class ProductController extends Controller
         return redirect()->route('products.index')->with($notification);
     }
 
-    
+
     /**
      * Show the form for editing the specified resource.
      *
@@ -152,7 +152,7 @@ class ProductController extends Controller
             'discount'=>'nullable',
             'description'=>'nullable|max:255',
         ]);
-        
+
         $price = $request->price;
         if($request->discount >0){
            $price = $request->discount * $request->price;
@@ -176,40 +176,25 @@ class ProductController extends Controller
     public function expired(Request $request){
         $title = "expired Products";
         if($request->ajax()){
-            $products = Purchase::whereDate('expiry_date', '=', Carbon::now())->get();
+            $products = Purchase::whereDate('expiry_date', '<',today())->get();
             return DataTables::of($products)
                 ->addColumn('product',function($product){
-                    $image = '';
-                    if(!empty($product->purchase)){
-                        $image = null;
-                        if(!empty($product->purchase->image)){
-                            $image = '<span class="avatar avatar-sm mr-2">
-                            <img class="avatar-img" src="'.asset("storage/purchases/".$product->purchase->image).'" alt="image">
-                            </span>';
-                        }
-                        return $product->purchase->product. ' ' . $image;
-                    }                 
+                        return today();
                 })
-                
+
                 ->addColumn('category',function($product){
-                    $category = null;
-                    if(!empty($product->purchase->category)){
-                        $category = $product->purchase->category->name;
-                    }
-                    return $category;
+                    return $product->category->name;
                 })
-                ->addColumn('price',function($product){                   
-                    return settings('app_currency','$').' '. $product->price;
+                ->addColumn('price',function($product){
+                    return settings('app_currency','$').' '. $product->cost_price;
                 })
                 ->addColumn('quantity',function($product){
-                    if(!empty($product->purchase)){
-                        return $product->purchase->quantity;
-                    }
+                        return $product->quantity;
                 })
                 ->addColumn('expiry_date',function($product){
-                    if(!empty($product->purchase)){
-                        return date_format(date_create($product->purchase->expiry_date),'d M, Y');
-                    }
+
+                        return date_format(date_create($product->expiry_date),'d M, Y');
+
                 })
                 ->addColumn('action', function ($row) {
                     $editbtn = '<a href="'.route("products.edit", $row->id).'" class="editbtn"><button class="btn btn-primary"><i class="fas fa-edit"></i></button></a>';
@@ -253,9 +238,9 @@ class ProductController extends Controller
                             </span>';
                         }
                         return $product->purchase->product. ' ' . $image;
-                    }                 
+                    }
                 })
-                
+
                 ->addColumn('category',function($product){
                     $category = null;
                     if(!empty($product->purchase->category)){
@@ -263,7 +248,7 @@ class ProductController extends Controller
                     }
                     return $category;
                 })
-                ->addColumn('price',function($product){                   
+                ->addColumn('price',function($product){
                     return settings('app_currency','$').' '. $product->price;
                 })
                 ->addColumn('quantity',function($product){
@@ -291,7 +276,7 @@ class ProductController extends Controller
                 ->rawColumns(['product','action'])
                 ->make(true);
         }
-        $product = Purchase::where('quantity', '<=', 0)->first();        
+        $product = Purchase::where('quantity', '<=', 0)->first();
         return view('admin.products.outstock',compact(
             'title',
         ));
