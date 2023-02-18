@@ -111,12 +111,13 @@
                 <div class="table-responsive">
                     <table id="sales-table" class="datatable table table-hover table-center mb-0">
                         <thead>
-                            <tr>
-                                <th>Medicine</th>
-                                <th>Quantity</th>
-                                <th>Total Price</th>
-                                <th>Date</th>
-                            </tr>
+                        <tr>
+                            <th>Medicine Name</th>
+                            <th>Quantity</th>
+                            <th>Total Price</th>
+                            <th>Date</th>
+                            <th class="action-btn">Action</th>
+                        </tr>
                         </thead>
                         <tbody>
 
@@ -135,7 +136,7 @@
                 <h4 class="card-title text-center">Resources</h4>
             </div>
             <div class="card-body">
-                <div style="">
+                <div>
                     {!! $pieChart->render() !!}
                 </div>
             </div>
@@ -150,11 +151,12 @@
 @endsection
 
 @push('page-js')
-<script>
+    <script>
     $(document).ready(function() {
         var table = $('#sales-table').DataTable({
             processing: true,
             serverSide: true,
+            lengthMenu: [[10, 20, 100, -1], [10, 20, 100, "All"]],
             ajax: "{{route('sales.index')}}",
             columns: [
                 {data: 'medicine', name: 'medicine',searchable: true},

@@ -23,6 +23,7 @@ class SaleController extends Controller
     {
         $title = 'sales';
 
+
         if($request->ajax()){
             if($request->search['value'])
             {
